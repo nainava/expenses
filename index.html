@@ -1,0 +1,419 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>expense prompts</title>
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' fill='%23059669'/%3E%3C/svg%3E">
+
+<!-- GoatCounter: counts page views automatically + each copy click as an event. -->
+<script data-goatcounter="https://aralo.goatcounter.com/count"
+        async src="//gc.zgo.at/count.js"></script>
+
+<!-- Inter font (heavy grotesque, matches the reference look) -->
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+
+<style>
+  :root{
+    --bg:#ffffff;
+    --ink:#1f2328;        /* main text */
+    --muted:#5b6470;      /* subtitles */
+    --card:#ffffff;
+    --card-border:#e2e5ea;
+    --prompt-bg:#f6f8fa;
+    --prompt-border:#e2e5ea;
+    --accent:#059669;     /* emerald — money / go */
+    --accent-hover:#047857;
+  }
+  *{box-sizing:border-box}
+  ::selection{background:#059669;color:#fff}      /* emerald highlight on double-click / drag-select */
+  ::-moz-selection{background:#059669;color:#fff}
+  body{
+    margin:0;
+    font-family:'Inter',-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;
+    background:var(--bg);
+    color:var(--ink);
+    line-height:1.5;
+    padding:0 20px;
+    -webkit-font-smoothing:antialiased;
+  }
+  .wrap{max-width:1080px;margin:0 auto;padding:64px 0 80px}
+
+  header{text-align:center;margin-bottom:52px}
+  h1{
+    font-size:56px;font-weight:900;text-transform:uppercase;
+    margin:0 0 18px;letter-spacing:-2px;line-height:.98;
+  }
+  .sub{color:var(--muted);font-size:18px;margin:0 auto;max-width:640px}
+
+  /* 3 columns on desktop, 2 on tablets, 1 on phones */
+  .grid{
+    display:grid;
+    grid-template-columns:repeat(3,1fr);
+    gap:24px;
+  }
+  @media (max-width:900px){ .grid{grid-template-columns:repeat(2,1fr)} }
+  @media (max-width:620px){
+    .grid{grid-template-columns:1fr}
+    h1{font-size:36px;letter-spacing:-1px}
+    .wrap{padding:40px 0 56px}
+    header{margin-bottom:36px}
+    .card .desc{min-height:0}   /* stacked: no reserved space needed */
+    .card h2{min-height:0}
+    .prompt{height:auto;max-height:280px}
+  }
+
+  .card{
+    display:flex;flex-direction:column;
+    background:var(--card);
+    border:1px solid var(--card-border);
+    border-radius:0;
+    padding:28px 24px;
+  }
+  .card h2{
+    font-size:21px;font-weight:800;line-height:1.2;letter-spacing:-.4px;
+    margin:0 0 8px;min-height:52px;
+  }
+  .card .desc{
+    color:var(--muted);font-size:14px;line-height:1.4;
+    margin:0 0 16px;min-height:112px;
+  }
+  .prompt{
+    background:var(--prompt-bg);
+    border:1px solid var(--prompt-border);
+    border-radius:0;
+    padding:16px;
+    font-size:13.5px;
+    white-space:pre-wrap;
+    color:#3a4048;
+    height:300px;           /* fixed box — long prompts scroll inside, not shown in full */
+    overflow-y:auto;
+    margin-bottom:18px;
+  }
+  .copy-btn{
+    display:inline-flex;align-items:center;justify-content:center;gap:8px;
+    width:100%;
+    background:var(--accent);color:#fff;border:none;
+    font-family:inherit;font-size:16px;font-weight:700;letter-spacing:.2px;
+    padding:14px 20px;border-radius:0;cursor:pointer;
+    transition:background .15s ease,transform .05s ease;
+  }
+  .copy-btn:hover{background:var(--accent-hover)}
+  .copy-btn:active{transform:translateY(1px)}
+  .copy-btn.copied{background:#3a3f4b}
+
+  footer{text-align:center;color:var(--muted);font-size:14px;margin-top:48px}
+  a{color:var(--accent)}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header>
+    <h1>Expense prompts</h1>
+    <p class="sub">Connect AI to your email. I use the Gmail plugin on ChatGPT. Copy the prompts below to chase down your outstanding expenses!</p>
+  </header>
+
+  <!--
+    ====================================================================
+    EDIT YOUR PROMPTS HERE
+    Change the <h2> title and the text inside <div class="prompt">.
+    Keep each data-count unique so your GoatCounter stats stay separate.
+    ====================================================================
+  -->
+  <div class="grid">
+
+    <div class="card">
+      <h2>General audit: who owes me money?</h2>
+      <p class="desc">Sweeps your whole inbox for any money, expenses, reimbursements, or fees you might still be owed. This one found me $800…</p>
+      <div class="prompt" id="prompt-1">@Gmail Search through all of my emails and identify any money, expenses, reimbursements, fees, wages, or other payments that may still be owed to me.
+
+I want you to look especially for anything connected to:
+
+- Work or freelance work
+- Job trials, trial shifts, trial days, auditions, tests, assessments, or working interviews
+- Travel for work, interviews, trials, meetings, shoots, events, or projects
+- Flights, trains, taxis, Uber/Lyft, mileage, petrol/gas, parking, tolls, hotels, accommodation, meals, or per diems
+- Expenses I paid personally that someone agreed to reimburse
+- Expense reports or expense claims I submitted
+- Receipts or invoices I sent
+- Contractor, consulting, freelance, appearance, day-rate, project, or other fees
+- Unpaid or partially paid invoices
+- Work completed where payment was discussed but I cannot find confirmation that I was paid
+- Deposits, advances, stipends, allowances, honorariums, or miscellaneous reimbursements
+- Emails where somebody says things like "we'll cover it," "we'll reimburse you," "send your receipts," "expense it," "invoice us," "we owe you," "payment will be processed," or similar language.
+
+Search both sent and received emails, and follow entire email threads where necessary.
+
+For each possible outstanding amount, give me:
+
+1. Company/person who may owe me
+2. What the payment or expense relates to
+3. Date or approximate date
+4. Amount and currency, if mentioned
+5. Expenses involved, itemized where possible
+6. Evidence in the emails that I am entitled to payment/reimbursement
+7. Whether I appear to have submitted an invoice, receipt, or expense claim
+8. Any evidence that payment was actually made
+9. Your assessment: Likely outstanding / Possibly outstanding / Appears paid / Unclear
+10. The relevant email subject, sender/recipient, and date so I can find it easily
+11. What I should check or do next
+
+Do not assume something was paid just because someone said it would be paid. Look for a later email confirming payment, remittance, transfer, reimbursement, or settlement.
+
+Also look for cases where I may have forgotten to submit an expense or invoice at all.
+
+At the end, create a consolidated table of everything that is Likely outstanding or Possibly outstanding, and calculate the total potentially owed to me by currency. Keep uncertain amounts separate from confirmed amounts.
+
+Be conservative: do not claim I am definitely owed money unless the emails support that conclusion. Flag anything ambiguous for me to review.</div>
+      <button class="copy-btn" data-target="prompt-1" data-count="copy-general-audit">
+        <span class="label">Copy prompt</span>
+      </button>
+    </div>
+
+    <div class="card">
+      <h2>Help prep my expense report</h2>
+      <p class="desc">Pulls every flight, hotel, rideshare, train, and rental car from your email into one spreadsheet, with dates, amounts, and locations. Up to you to sort which are work related! This would have saved me hours when building my expense reports.</p>
+      <div class="prompt" id="prompt-2">@Gmail Search through my Gmail from scratch and create a new spreadsheet containing every identifiable:
+
+- Flight or airfare purchase
+- Uber, Lyft, taxi, or car-service trip
+- Hotel or accommodation booking
+- Train or public-transport purchase
+- Rental-car purchase
+
+Do not use or reference any existing spreadsheet, expense folder, prior report, or previous expense analysis. Search the underlying emails directly, including both sent and received mail.
+
+INCLUSION RULE
+
+Include every genuine expense in these categories, regardless of whether it appears business-related, personal, reimbursed, or unclear.
+
+Do not classify or determine whether any expense is business-related or personal. Do not exclude expenses based on their apparent purpose. The person receiving the spreadsheet will decide which expenses qualify.
+
+LOCATION AND TRAVEL DETAILS
+
+Extract as much factual location information as the emails provide.
+
+For flights, capture: origin airport/city, destination airport/city, departure date, return date (if round trip), flight number, passenger name, airline, booking reference, ticket number.
+
+For rideshares, taxis, and car services, capture: pickup location, drop-off location, trip date, trip time, distance (if shown), service type (e.g. UberX or Lyft), trip or receipt ID.
+
+For hotels, capture: hotel name, full address, city/state/country, check-in date, check-out date, number of nights, guest name, reservation or folio number.
+
+For trains and public transport, capture: origin station, destination station, travel date and time, operator, ticket type, booking or ticket number.
+
+For rental cars, capture: pickup location, return location, pickup date/time, return date/time, rental company, vehicle class (if shown), rental agreement or confirmation number.
+
+FOR EACH EXPENSE, extract:
+
+1. Purchase or charge date
+2. Travel or service date
+3. Merchant or provider
+4. Category
+5. Origin or pickup address
+6. Destination or drop-off address
+7. City or location
+8. Description or route
+9. Check-in or pickup date
+10. Check-out or return date
+11. Amount
+12. Currency
+13. Payment method, including the last four digits when shown
+14. Whether there is explicit evidence that I personally paid
+15. Whether there is explicit evidence it was reimbursed
+16. Whether an original merchant receipt, invoice, folio, or ticket appears to be available
+17. Booking, ticket, trip, receipt, folio, or rental reference
+18. Source email subject
+19. Source email sender
+20. Source email recipient
+21. Source email date
+22. Direct Gmail link to the source email
+23. Useful factual notes
+
+Do not infer a business purpose, client, employer, project, or personal purpose. Only record contextual details if they are explicitly stated in the source emails.
+
+DEDUPLICATION
+
+Avoid duplicates. Do not count a booking confirmation, itinerary, receipt, reminder, check-in notice, tip update, cancellation update, or follow-up as a separate expense when it refers to the same purchase. Use booking references, ticket numbers, trip IDs, routes, travel dates, amounts, hotel stay dates, and email-thread context to identify duplicates.
+
+SPREADSHEET
+
+Create a new spreadsheet with one row per expense and exactly these columns:
+
+Expense ID | Purchase Date | Travel/Service Date | Merchant | Category | Origin/Pickup Address | Destination/Drop-off Address | City/Location | Description/Route | Check-in/Pickup Date | Check-out/Return Date | Amount | Currency | Payment Method | Personally Paid? | Reimbursed? | Original Receipt Available? | Booking/Reference | Source Email Subject | Source Sender | Source Recipient | Source Email Date | Source Email Link | Notes
+
+Do not add classification, status, confidence, reviewer, business-purpose, trip-purpose, client, project, employer, "ready to claim," or similar columns.
+
+NOTES
+
+Use the Notes column for useful factual details that do not fit elsewhere (flight numbers, passenger/guest name, number of hotel nights, rideshare service type, trip time and distance, train ticket type, rental-car vehicle class, unusual payment details, missing factual information, explicit context stated in the source email). Do not use Notes to classify an expense as personal, business-related, or reimbursable.
+
+SORTING AND EXPENSE IDS
+
+Sort all rows chronologically by Travel/Service Date, oldest to newest. If Travel/Service Date is unavailable, sort using Purchase Date. Assign Expense IDs only after sorting, so EXP-001 is the earliest expense.
+
+SUMMARY TAB (factual totals only)
+
+- Total expenses by currency
+- Total expenses by category
+- Count by merchant or provider
+- Count with original receipts
+- Count without original receipts
+- Count with known payment methods
+- Count with unknown payment methods
+
+Do not calculate totals for "ready to claim," "likely work-related," "likely personal," or similar classifications.
+
+OUTPUT LIMIT
+
+Do not create, reconstruct, export, or download PDFs, receipts, email files, folders, or ZIP files. The only deliverable should be the new spreadsheet with direct Gmail links to the supporting emails.
+
+Return only the completed spreadsheet.</div>
+      <button class="copy-btn" data-target="prompt-2" data-count="copy-expense-report">
+        <span class="label">Copy prompt</span>
+      </button>
+    </div>
+
+    <div class="card">
+      <h2>For freelancers: who owes me money?</h2>
+      <p class="desc">Audits your email for freelance and contract work you may not have fully invoiced or been paid for.</p>
+      <div class="prompt" id="prompt-3">@Gmail Audit all of my email for freelance, consulting, contractor, creative, project-based, or self-employed work that I may not have been fully paid for.
+
+The goal is to identify money I should potentially invoice, chase, or recover.
+
+Search both sent and received emails, and follow full threads where necessary.
+
+Look especially for:
+
+- Unpaid invoices
+- Overdue invoices
+- Partially paid invoices
+- Work I completed but may never have invoiced
+- Projects where a fee, day rate, hourly rate, retainer, commission, or project price was agreed
+- Emails where somebody asks me to "send an invoice"
+- Work that was delivered, approved, accepted, published, launched, completed, or signed off
+- Deposits, retainers, milestone payments, final payments, or balances still due
+- Extra days, revisions, change requests, scope additions, rush fees, or additional work that may not have been billed
+- Expenses I paid personally on behalf of a client
+- Flights, hotels, taxis, rideshares, meals, equipment, materials, shipping, or other reimbursable project expenses
+- Purchase orders, contracts, statements of work, rate confirmations, booking confirmations, or payment terms
+- Emails saying payment is "being processed," "with finance," "coming next week," "scheduled," or similar where I cannot find later evidence of actual payment
+- Work where payment was discussed informally in an email thread but no formal invoice may have been created
+- Cancellations, kill fees, cancellation fees, usage fees, licensing fees, royalties, expenses, or other compensation I may be entitled to
+
+For each possible payment, identify:
+
+1. Client/company
+2. Project or work performed
+3. Date or period of work
+4. Agreed rate or fee
+5. Amount that appears billable
+6. Amount already invoiced, if any
+7. Invoice number, if available
+8. Invoice date
+9. Payment terms or due date
+10. Evidence that the work was completed
+11. Evidence that the client approved or accepted the work
+12. Evidence that an invoice was sent
+13. Evidence that payment was actually received
+14. Any reimbursable expenses associated with the work
+15. Any additional work or scope that may not have been billed
+16. Relevant email subject, sender/recipient, and date
+17. Recommended next action
+
+Classify each item as: Needs invoice / Potentially under-invoiced / Invoice sent — payment unclear / Overdue / Partially paid / Expense not yet claimed / Appears paid / Unclear.
+
+Pay particular attention to work that appears to have been completed but for which I cannot find an invoice at all.
+
+Do not assume that a promise to pay means payment occurred. Look for later evidence such as payment confirmation, remittance advice, bank-transfer confirmation, receipt, paid invoice, client confirmation, or an email from me acknowledging receipt of payment.
+
+Avoid double-counting the same project, invoice, fee, or expense when it appears across several emails.
+
+Also compare the agreed scope with later emails. Flag situations where the project expanded — for example additional days, deliverables, revisions, travel, rush work, or expenses — but I cannot find evidence that those extras were invoiced.
+
+At the end, create a consolidated Money to Chase table with:
+
+Client | Project | Work Date | Agreed Fee | Amount Invoiced | Amount Potentially Outstanding | Currency | Invoice # | Invoice Sent? | Due Date | Evidence Paid? | Status | Next Action
+
+Then calculate separately by currency:
+- Total apparently overdue
+- Total possibly outstanding
+- Total completed but apparently never invoiced
+- Total potentially under-invoiced
+- Total reimbursable expenses that may still be unclaimed
+
+Finally, give me a prioritized list:
+
+CHASE NOW — items with strong evidence that money is due.
+INVOICE NOW — work that appears complete but for which no invoice can be found.
+REVIEW — items where the evidence is ambiguous.
+
+Be conservative. Do not state that money is definitely owed unless the email evidence supports it. Flag anything uncertain for me to verify.</div>
+      <button class="copy-btn" data-target="prompt-3" data-count="copy-freelancers">
+        <span class="label">Copy prompt</span>
+      </button>
+    </div>
+
+  </div>
+
+  <footer>Tip: your assistant needs the Gmail connector turned on for these to work.</footer>
+</div>
+
+<script>
+  // Counts every copy: locally (Console) + in GoatCounter as a named event.
+  function track(name){
+    try{
+      var key = 'count_' + name;
+      var n = (parseInt(localStorage.getItem(key) || '0', 10) || 0) + 1;
+      localStorage.setItem(key, n);
+      console.log('[count] ' + name + ' = ' + n + ' (this browser)');
+    }catch(e){}
+    if(window.goatcounter && window.goatcounter.count){
+      window.goatcounter.count({ path: name, title: name, event: true });
+    }
+  }
+
+  function copyText(text){
+    if(navigator.clipboard && navigator.clipboard.writeText){
+      return navigator.clipboard.writeText(text);
+    }
+    return new Promise(function(resolve, reject){
+      try{
+        var ta = document.createElement('textarea');
+        ta.value = text;
+        ta.style.position = 'fixed';
+        ta.style.opacity = '0';
+        document.body.appendChild(ta);
+        ta.select();
+        document.execCommand('copy');
+        document.body.removeChild(ta);
+        resolve();
+      }catch(err){ reject(err); }
+    });
+  }
+
+  document.querySelectorAll('.copy-btn').forEach(function(btn){
+    btn.addEventListener('click', function(){
+      var target = document.getElementById(btn.getAttribute('data-target'));
+      var text = target ? target.innerText : '';
+      var label = btn.querySelector('.label');
+      var original = label.textContent;
+
+      copyText(text).then(function(){
+        track(btn.getAttribute('data-count'));
+        label.textContent = 'Copied ✓';
+        btn.classList.add('copied');
+        setTimeout(function(){
+          label.textContent = original;
+          btn.classList.remove('copied');
+        }, 1600);
+      }).catch(function(){
+        label.textContent = 'Press Ctrl/Cmd+C';
+        setTimeout(function(){ label.textContent = original; }, 2000);
+      });
+    });
+  });
+</script>
+</body>
+</html>
