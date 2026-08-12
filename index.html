@@ -414,6 +414,18 @@ Be conservative. Do not state that money is definitely owed unless the email evi
       });
     });
   });
+
+  // Also count manual copies: when someone selects the prompt text and hits
+  // Cmd/Ctrl+C (bypassing the button). Fires a "-manual" event so you can see
+  // button clicks vs. text-selection copies separately in GoatCounter.
+  document.querySelectorAll('.prompt').forEach(function(box){
+    box.addEventListener('copy', function(){
+      var card = box.closest('.card');
+      var btn = card ? card.querySelector('.copy-btn') : null;
+      var name = btn ? btn.getAttribute('data-count') : 'copy-unknown';
+      track(name + '-manual');
+    });
+  });
 </script>
 </body>
 </html>
